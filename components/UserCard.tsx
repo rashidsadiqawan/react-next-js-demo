@@ -1,22 +1,37 @@
-import React from 'react';
-import './UserCard.css';
+import React, { useEffect, useState } from 'react';
 
-interface UserCardProps {
+interface User {
+  id: number;
   name: string;
   email: string;
-  avatarUrl: string;
+  phone: string;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ name, email, avatarUrl }) => {
+const UsersClientSide: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const res = await fetch('https://jsonplaceholder.typicode.com/users');
+      const data = await res.json();
+      setUsers(data);
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
-    <div className="user-card">
-      <img src={avatarUrl} alt={`${name}'s avatar`} className="user-avatar" />
-      <div className="user-info">
-        <h2>{name}</h2>
-        <p>{email}</p>
-      </div>
+    <div style={{ padding: '2rem' }}>
+      <h1>Client-side Fetched Users</h1>
+      <ul>
+        {users.map(user => (
+          <li key={user.id}>
+            <strong>{user.name}</strong> - {user.email}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default UserCard;
+export default UsersClientSide;
