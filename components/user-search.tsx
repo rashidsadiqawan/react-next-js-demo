@@ -28,7 +28,16 @@ const UserSearch: React.FC = () => {
     );
     setFilteredUsers(results);
   }, [search, users]);
+useEffect(() => {
+  const delayDebounce = setTimeout(() => {
+    const results = users.filter((user) =>
+      user.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredUsers(results);
+  }, 300); // 300ms delay
 
+  return () => clearTimeout(delayDebounce);
+}, [search, users]);
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
